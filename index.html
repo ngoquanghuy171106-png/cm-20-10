@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gửi Em - 20/10 Yêu Thương</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+/* ===== MÀN HÌNH PHONG THƯ ===== */
+
+.envelope-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    padding: 20px;
+    text-align: center;
+    background:
+        radial-gradient(ellipse at center, #522441 0%, transparent 65%),
+        #100817;
+    transition: opacity .8s ease, visibility .8s ease;
+}
+
+.envelope-screen::before {
+    content: "✦     ✧       ·      ✧       ✦";
+    position: absolute;
+    top: 12%;
+    width: 100%;
+    color: #ffbddb;
+    letter-spacing: 14px;
+    opacity: .7;
+    pointer-events: none;
+}
+
+.envelope-screen.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.envelope-content {
+    width: min(440px, 100%);
+    position: relative;
+    z-index: 1;
+    animation: envelopeAppear 1s ease both;
+}
+
+@keyframes envelopeAppear {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.envelope-date {
+    color: #f4a9ce;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+.envelope-title {
+    margin: 20px 0 10px;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(42px, 9vw, 60px);
+    color: #ffd3e6;
+    text-shadow: 0 0 25px #ff79b088;
+}
+
+.envelope-subtitle {
+    color: #e5cde1;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.envelope-button {
+    display: block;
+    margin: 65px auto 45px;
+    padding: 0;
+    background: transparent;
+    outline-offset: 12px;
+}
+
+.envelope {
+    display: block;
+    position: relative;
+    width: min(280px, 72vw);
+    height: 180px;
+    perspective: 800px;
+    filter: drop-shadow(0 15px 30px #0005);
+    transition: transform .3s;
+}
+
+.envelope-button:hover .envelope {
+    transform: translateY(-6px);
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: #eaa0c4;
+    border-radius: 8px;
+}
+
+.letter {
+    position: absolute;
+    z-index: 1;
+    left: 9%;
+    bottom: 7px;
+    width: 82%;
+    height: 85%;
+    border-radius: 5px;
+    background: #fff4f7;
+    color: #a83f6d;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: transform 1s ease;
+}
+
+.letter span {
+    font-size: 38px;
+}
+
+.letter small {
+    font-family: 'Dancing Script', cursive;
+    font-size: 25px;
+}
+
+.envelope-front {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    border-radius: 8px;
+    background: #f6b8d3;
+    clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+}
+
+.envelope-flap {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    background: #ffcee2;
+    clip-path: polygon(0 0, 100% 0, 50% 60%);
+    transform-origin: top center;
+    transition: transform .8s ease;
+}
+
+.heart-seal {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    color: #bd416e;
+    font-size: 35px;
+    text-shadow: 0 2px 5px #a83f2b33;
+    transition: opacity .3s;
+}
+
+.envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.envelope.open .letter {
+    transform: translateY(-95px);
+    z-index: 2;
+}
+
+.envelope.open .heart-seal {
+    opacity: 0;
+}
+
+.envelope-hint {
+    color: #ffc3df;
+    font-size: 13px;
+    animation: hintPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes hintPulse {
+    to { opacity: .45; }
+}
+
+/* NÚT ĐIỀU KHIỂN NHẠC */
+
+.music-toggle {
+    position: fixed;
+    right: 16px;
+    bottom: 18px;
+    z-index: 900;
+    padding: 12px 16px;
+    border: 1px solid #ff9bc966;
+    border-radius: 30px;
+    color: #ffe0ed;
+    background: #30182fee;
+    box-shadow: 0 0 20px #ff79b033;
+    font-size: 12px;
+}
+
+.music-toggle[hidden] {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .envelope {
+        height: 155px;
+    }
+
+    .envelope-button {
+        margin-top: 55px;
+        margin-bottom: 40px;
+    }
+}
+
+.couple-photo {
+    margin: 25px auto;
+    text-align: center;
+}
+
+.couple-photo img {
+    width: min(300px, 85%);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 22px;
+    border: 2px solid #ff9bc9;
+    box-shadow: 0 0 25px #ff79b066;
+    transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.couple-photo img:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 40px #ff79b099;
+}
+
+.couple-photo p {
+    margin-top: 12px;
+    color: #ffc5df;
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+}
+
+:root {
+    --pink: #ff79b0;
+    --light-pink: #ffd5e6;
+    --purple: #c6a0ff;
+    --bg: #100817;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+    background:
+        radial-gradient(ellipse at 50% 0%, #482044 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 90%, #25143c 0%, transparent 45%),
+        var(--bg);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .3;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 80% 60%, #ff9bc9, transparent),
+        radial-gradient(1px 1px at 50% 80%, white, transparent),
+        radial-gradient(2px 2px at 70% 20%, #d7b3ff, transparent);
+    background-size: 180px 180px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: .15; }
+    to { opacity: .55; }
+}
+
+.container {
+    width: min(760px, 92%);
+    margin: auto;
+    text-align: center;
+    padding: 55px 0 45px;
+    position: relative;
+    z-index: 2;
+}
+
+.tag {
+    display: inline-block;
+    border: 1px solid #ff8abd66;
+    border-radius: 30px;
+    padding: 9px 20px;
+    color: #ffd1e5;
+    background: #ff80bd12;
+    font-size: 12px;
+    letter-spacing: 3px;
+    animation: appear 1s ease both;
+}
+
+h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(42px, 8vw, 76px);
+    color: #ffd5e8;
+    margin: 24px 0 10px;
+    text-shadow:
+        0 0 10px #ff79b0,
+        0 0 30px #ff409d88,
+        0 0 65px #b94dff55;
+    animation: glow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #ff79b0, 0 0 25px #ff409d66; }
+    to { text-shadow: 0 0 20px #ff79b0, 0 0 50px #ff409dcc; }
+}
+
+.subtitle {
+    color: #d9c1e4;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.heart-scene {
+    width: 180px;
+    height: 175px;
+    margin: 25px auto 15px;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.big-heart {
+    font-size: 105px;
+    filter: drop-shadow(0 0 20px #ff438f);
+    animation: heartbeat 1.2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.13); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.08); }
+}
+
+.orbit {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border: 1px solid #ff8acb44;
+    border-radius: 50%;
+    animation: rotate 12s linear infinite;
+}
+
+.orbit::before, .orbit::after {
+    content: "♥";
+    position: absolute;
+    color: #ff9dcc;
+    text-shadow: 0 0 12px #ff79b0;
+}
+
+.orbit::before {
+    top: 5px;
+    left: 24px;
+}
+
+.orbit::after {
+    bottom: 10px;
+    right: 12px;
+}
+
+@keyframes rotate {
+    to { transform: rotate(360deg); }
+}
+
+.card {
+    margin: 25px auto;
+    padding: 28px clamp(18px, 5vw, 38px);
+    border: 1px solid #ffb2d42c;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ffffff0c, #ff9aca0a);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 50px #00000030, inset 0 0 25px #ffb2d408;
+}
+
+.card h2 {
+    font-family: 'Dancing Script', cursive;
+    color: #ffb7d8;
+    font-size: 35px;
+    margin-bottom: 18px;
+}
+
+.message {
+    color: #f8e9f4;
+    font-size: 15px;
+    line-height: 2;
+    min-height: 100px;
+    white-space: pre-line;
+}
+
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 17px;
+    background: var(--pink);
+    margin-left: 3px;
+    animation: blink .7s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.main-btn {
+    margin-top: 15px;
+    padding: 15px 25px;
+    border-radius: 40px;
+    color: #45122d;
+    background: linear-gradient(120deg, #ffb6d5, #ff79b0, #d6a7ff);
+    box-shadow: 0 0 25px #ff79b044;
+    font-size: 14px;
+}
+
+.main-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 0 35px #ff79b088;
+}
+
+.gift {
+    display: none;
+    margin-top: 25px;
+    padding: 25px 18px;
+    border-radius: 20px;
+    border: 1px solid #ffb2d455;
+    background: #ff91c00b;
+    animation: appear .8s ease both;
+}
+
+.gift.show {
+    display: block;
+}
+
+.gift .rose {
+    font-size: 55px;
+    animation: heartbeat 1.5s infinite;
+}
+
+.gift h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 37px;
+    color: #ffb8d7;
+    margin: 15px 0;
+}
+
+.gift p {
+    color: #f8e5f1;
+    line-height: 2;
+    font-size: 14px;
+}
+
+.promise {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 30px 0;
+}
+
+.promise-item {
+    padding: 20px 10px;
+    border-radius: 18px;
+    border: 1px solid #ffffff13;
+    background: #ffffff08;
+    transition: .3s;
+}
+
+.promise-item:hover {
+    transform: translateY(-5px);
+    background: #ff9bce12;
+    border-color: #ff9bce55;
+}
+
+.promise-item .icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.promise-item h3 {
+    color: #ffc5df;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.promise-item p {
+    color: #cbb9d1;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.signature {
+    margin-top: 35px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    color: #ffb6d8;
+    line-height: 1.8;
+}
+
+footer {
+    margin-top: 25px;
+    color: #9e87a9;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.floating {
+    position: fixed;
+    bottom: -40px;
+    pointer-events: none;
+    z-index: 1;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: .85; }
+    90% { opacity: .65; }
+    100% {
+        transform: translateY(-115vh) rotate(35deg);
+        opacity: 0;
+    }
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 520px) {
+    .container { padding-top: 35px; }
+    .card { padding: 24px 18px; }
+    .promise { gap: 7px; }
+    .promise-item { padding: 16px 5px; }
+    .promise-item h3 { font-size: 11px; }
+    .promise-item p { font-size: 10px; }
+    .message { font-size: 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MÀN HÌNH PHONG THƯ -->
+<div class="envelope-screen" id="envelopeScreen">
+    <div class="envelope-content">
+        <p class="envelope-date">SPECIAL DELIVERY · 20/10/2026</p>
+
+        <h1 class="envelope-title">Gửi em yêu 💗</h1>
+
+        <p class="envelope-subtitle">
+            Anh có một món quà nhỏ dành riêng cho em...
+        </p>
+
+        <button class="envelope-button" id="openLetter"
+                aria-label="Mở phong thư">
+            <span class="envelope">
+                <span class="letter">
+                    <span>💌</span>
+                    <small>Gửi em</small>
+                </span>
+
+                <span class="envelope-back"></span>
+                <span class="envelope-flap"></span>
+                <span class="envelope-front"></span>
+                <span class="heart-seal">♥</span>
+            </span>
+        </button>
+
+        <p class="envelope-hint" id="envelopeHint">
+            ♡ Chạm vào phong thư để mở ♡
+        </p>
+    </div>
+</div>
+
+<!-- NHẠC NỀN -->
+<audio id="bgMusic" loop preload="none">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- NÚT BẬT/TẮT NHẠC -->
+<button id="musicToggle" class="music-toggle"
+        aria-label="Bật hoặc tắt nhạc" hidden>
+    ♫ Nhạc: Tắt
+</button>
+
+<main class="container">
+
+    <div class="tag">✦ 20 . 10 . 2026 ✦</div>
+
+    <h1>Gửi em, người anh thương</h1>
+
+    <p class="subtitle">
+        Hôm nay là một ngày thật đặc biệt...<br>
+        Vì anh có một điều muốn nói với em 💗
+    </p>
+
+    <div class="heart-scene">
+        <div class="orbit"></div>
+        <div class="big-heart">💗</div>
+    </div>
+<div style="margin:20px auto">
+    <img src="anhdoi.jpg"
+         alt="Kỷ niệm của chúng mình"
+         style="width:min(280px,80%);
+                border-radius:20px;
+                border:2px solid #ff9bc9;
+                box-shadow:0 0 25px #ff79b066;">
+</div>
+    <section class="card">
+        <h2>Một chút yêu thương dành cho em</h2>
+
+        <p class="message" id="message"></p>
+
+        <button class="main-btn" id="giftBtn">
+            🎁 Mở món quà của anh
+        </button>
+
+        <div class="gift" id="gift">
+            <div class="rose">💐</div>
+            <h2>Chúc mừng 20/10, em yêu!</h2>
+
+            <p>
+                Chúc cô gái của anh luôn xinh tươi,
+                vui vẻ và bình an mỗi ngày. 🌷<br><br>
+
+                Mong rằng những điều tốt đẹp nhất sẽ đến với em,
+                những nỗi buồn sẽ nhẹ nhàng qua đi,
+                còn những niềm vui sẽ ở lại thật lâu.<br><br>
+
+                Cảm ơn em vì đã xuất hiện trong cuộc sống của anh.
+                Anh mong chúng mình sẽ cùng nhau tạo nên
+                thật nhiều kỷ niệm đẹp, cùng cười, cùng cố gắng
+                và cùng trưởng thành hơn mỗi ngày.<br><br>
+
+                <strong>
+                    Chúc cô gái anh thương một ngày 20/10
+                    thật hạnh phúc. Anh thương em nhiều! 💗
+                </strong>
+            </p>
+        </div>
+    </section>
+
+    <section class="promise">
+        <div class="promise-item">
+            <div class="icon">🌷</div>
+            <h3>Luôn dịu dàng</h3>
+            <p>Mong em luôn được yêu thương và trân trọng.</p>
+        </div>
+
+        <div class="promise-item">
+            <div class="icon">🫶</div>
+            <h3>Luôn bên cạnh</h3>
+            <p>Cùng nhau sẻ chia những niềm vui, nỗi buồn.</p>
+        </div>
+
+        <div class="promise-item">
+            <div class="icon">✨</div>
+            <h3>Luôn hạnh phúc</h3>
+            <p>Mong nụ cười luôn ở trên môi em.</p>
+        </div>
+    </section>
+
+    <div class="signature">
+        With all my love ♡<br>
+        Người luôn mong em hạnh phúc
+    </div>
+
+    <footer>
+        MADE WITH ♡ JUST FOR YOU · 20/10/2026
+    </footer>
+
+</main>
+
+<script>
+const message = document.getElementById("message");
+const giftBtn = document.getElementById("giftBtn");
+const gift = document.getElementById("gift");
+
+// SỬA LỜI NHẮN TẠI ĐÂY
+const text =
+    "Gửi cô gái đặc biệt nhất trong lòng anh... 💗\n\n" +
+    "Anh không biết phải nói những lời hoa mỹ thế nào,\n" +
+    "nhưng anh chỉ muốn em biết rằng:\n" +
+    "Có em là một điều thật đáng quý.\n\n" +
+    "Nhân ngày 20/10, anh chúc em luôn vui vẻ,\n" +
+    "luôn tự tin và luôn là chính mình.\n" +
+    "Mong mỗi ngày của em đều có thật nhiều điều ngọt ngào.\n\n" +
+    "Và bây giờ... hãy mở món quà nhỏ này nhé! 💌";
+
+let index = 0;
+
+function typeText() {
+    if (index < text.length) {
+        message.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeText, text.charAt(index - 1) === "\n" ? 350 : 42);
+    }
+}
+
+
+
+// Mở quà
+giftBtn.addEventListener("click", () => {
+    const isOpen = gift.classList.toggle("show");
+
+    giftBtn.textContent = isOpen
+        ? "💗 Đóng món quà"
+        : "🎁 Mở món quà của anh";
+
+    if (isOpen) {
+        gift.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        // Trái tim bay khi mở quà
+        for (let i = 0; i < 18; i++) {
+            setTimeout(createHeart, i * 100);
+        }
+    }
+});
+
+// Tạo trái tim và cánh hoa bay
+function createHeart() {
+    const el = document.createElement("div");
+    const items = ["💗", "💕", "💖", "🌸", "🌷", "✨"];
+
+    el.className = "floating";
+    el.textContent = items[Math.floor(Math.random() * items.length)];
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = (14 + Math.random() * 20) + "px";
+    el.style.animationDuration = (6 + Math.random() * 6) + "s";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 12500);
+}
+
+// Tạo hiệu ứng liên tục
+setInterval(createHeart, 650);
+
+const envelopeScreen = document.getElementById("envelopeScreen");
+const openLetter = document.getElementById("openLetter");
+const envelope = document.querySelector(".envelope");
+const envelopeHint = document.getElementById("envelopeHint");
+
+const bgMusic = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+let letterOpened = false;
+
+// Nhấn phong thư để mở
+openLetter.addEventListener("click", () => {
+    if (letterOpened) return;
+
+    letterOpened = true;
+    envelope.classList.add("open");
+    envelopeHint.textContent = "Một chút yêu thương dành cho em... 💗";
+
+    // Việc phát nhạc không được làm chậm quá trình mở thư.
+    bgMusic.volume = 0.35;
+    musicToggle.hidden = false;
+    musicToggle.textContent = "♫ Nhạc: Tắt";
+
+    bgMusic.play()
+        .then(() => {
+            musicToggle.textContent = "♫ Nhạc: Bật";
+        })
+        .catch(() => {
+            musicToggle.textContent = "♫ Nhạc: Tắt";
+        });
+
+    // Chờ hiệu ứng phong thư rồi hiện website chính
+    setTimeout(() => {
+        envelopeScreen.classList.add("hide");
+
+        // Chạy hiệu ứng gõ chữ sau khi mở thư
+        setTimeout(() => {
+            envelopeScreen.style.display = "none";
+
+            if (typeof typeText === "function") {
+                message.textContent = "";
+                index = 0;
+                typeText();
+            }
+        }, 850);
+    }, 1300);
+});
+
+// Bật hoặc tắt nhạc
+musicToggle.addEventListener("click", async () => {
+    if (bgMusic.paused) {
+        try {
+            await bgMusic.play();
+            musicToggle.textContent = "♫ Nhạc: Bật";
+        } catch (error) {
+            musicToggle.textContent = "♫ Không phát được";
+        }
+    } else {
+        bgMusic.pause();
+        musicToggle.textContent = "♫ Nhạc: Tắt";
+    }
+});
+
+</script>
+</body>
+</html>
