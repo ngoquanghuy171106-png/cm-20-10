@@ -11,6 +11,91 @@
 
 /* ===== MÀN HÌNH PHONG THƯ ===== */
 
+/* Khung hiệu ứng ảnh bay */
+.photo-burst {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Từng tấm ảnh */
+.flying-photo {
+    position: absolute;
+    bottom: -220px;
+    width: clamp(90px, 15vw, 170px);
+    height: clamp(120px, 21vw, 215px);
+    object-fit: cover;
+    padding: 6px 6px 22px;
+    border-radius: 8px;
+    background: #fff8fc;
+    box-shadow: 0 0 25px #ff79b088;
+    opacity: 0;
+    animation: photoFly var(--duration, 5s) ease-out forwards;
+    will-change: transform, opacity;
+}
+
+@keyframes photoFly {
+    0% {
+        opacity: 0;
+        transform:
+            translate3d(0, 0, 0)
+            rotate(var(--start-rotate, 0deg))
+            scale(.45);
+    }
+
+    12% {
+        opacity: 1;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate3d(var(--drift, 0px), -125vh, 0)
+            rotate(var(--end-rotate, 30deg))
+            scale(var(--end-scale, 1));
+    }
+}
+
+/* Trái tim và biểu tượng bay cùng ảnh */
+.burst-heart {
+    position: absolute;
+    bottom: -60px;
+    font-size: 28px;
+    animation: heartFly var(--duration, 4s) ease-out forwards;
+}
+
+@keyframes heartFly {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(.4);
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate(var(--drift, 0px), -110vh)
+            rotate(25deg)
+            scale(1.5);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flying-photo,
+    .burst-heart {
+        animation-duration: 2s;
+    }
+}
+
 .envelope-screen {
     position: fixed;
     inset: 0;
@@ -565,6 +650,288 @@ footer {
     .promise-item p { font-size: 10px; }
     .message { font-size: 14px; }
 }
+
+/* ===== CỬA SỔ HIỆU ỨNG TÌNH YÊU ===== */
+
+.love-experience {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    place-items: center;
+    overflow: hidden;
+    padding: 24px;
+    background: rgba(13, 5, 22, .96);
+    backdrop-filter: blur(12px);
+    color: #fff1f8;
+}
+
+.love-experience.active {
+    display: grid;
+    animation: loveFadeIn .6s ease both;
+}
+
+.love-close {
+    position: absolute;
+    z-index: 20;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ffb2d455;
+    border-radius: 50%;
+    background: #ffffff12;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.love-close:hover {
+    background: #ff79b055;
+    transform: rotate(90deg);
+}
+
+.love-scene {
+    position: relative;
+    z-index: 5;
+    width: min(560px, 100%);
+    text-align: center;
+    padding: 30px 15px;
+}
+
+.love-visual {
+    position: relative;
+    z-index: 2;
+    font-size: clamp(80px, 16vw, 125px);
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 25px #ff79b0aa);
+}
+
+.love-scene h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(34px, 7vw, 53px);
+    line-height: 1.25;
+    color: #ffc2df;
+    text-shadow: 0 0 24px #ff79b077;
+    margin-bottom: 20px;
+}
+
+.love-scene p {
+    min-height: 80px;
+    max-width: 450px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 2;
+    color: #f8e8f5;
+    white-space: pre-line;
+}
+
+.love-hug {
+    margin-top: 25px;
+    padding: 13px 22px;
+    border: 1px solid #ffb1d9;
+    border-radius: 30px;
+    color: #fff0f7;
+    background: linear-gradient(120deg, #9f367b, #6c3b91);
+    box-shadow: 0 0 25px #ff79b044;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.love-hug:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 35px #ff79b088;
+}
+
+@keyframes loveFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* HIỆU ỨNG 1: MƯA HOA HỒNG */
+
+.love-experience.rose-mode {
+    background:
+        radial-gradient(ellipse at center, #54203f, #160817 75%);
+}
+
+.rose-mode .love-visual {
+    animation: roseBloom 2s ease-in-out infinite alternate;
+}
+
+@keyframes roseBloom {
+    from { transform: scale(.8) rotate(-8deg); }
+    to { transform: scale(1.12) rotate(8deg); }
+}
+
+.rose-petal {
+    position: absolute;
+    top: -50px;
+    z-index: 1;
+    pointer-events: none;
+    animation: petalFall var(--fall-time, 6s) linear forwards;
+}
+
+@keyframes petalFall {
+    0% {
+        transform: translate3d(0, -10vh, 0) rotate(0);
+        opacity: 0;
+    }
+    12% { opacity: .95; }
+    100% {
+        transform: translate3d(var(--sway, 80px), 115vh, 0)
+                   rotate(650deg);
+        opacity: 0;
+    }
+}
+
+/* HIỆU ỨNG 2: HAI TRÁI TIM KẾT NỐI */
+
+.love-experience.heart-mode {
+    background:
+        radial-gradient(ellipse at center, #472047, #100817 75%);
+}
+
+.heart-pair {
+    position: absolute;
+    top: 18%;
+    left: 0;
+    width: 100%;
+    font-size: clamp(45px, 9vw, 75px);
+    pointer-events: none;
+}
+
+.heart-pair span {
+    position: absolute;
+    filter: drop-shadow(0 0 18px #ff5fa6);
+}
+
+.heart-pair span:first-child {
+    left: 10%;
+    animation: heartMeetLeft 2s ease-in-out forwards;
+}
+
+.heart-pair span:last-child {
+    right: 10%;
+    animation: heartMeetRight 2s ease-in-out forwards;
+}
+
+@keyframes heartMeetLeft {
+    0% { transform: translateX(0) scale(.6); }
+    70% { transform: translateX(25vw) scale(1.2); }
+    100% { transform: translateX(25vw) scale(1); }
+}
+
+@keyframes heartMeetRight {
+    0% { transform: translateX(0) scale(.6); }
+    70% { transform: translateX(-25vw) scale(1.2); }
+    100% { transform: translateX(-25vw) scale(1); }
+}
+
+.heart-spark {
+    position: absolute;
+    pointer-events: none;
+    animation: heartSpark 2.5s ease-out forwards;
+}
+
+@keyframes heartSpark {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(.3);
+    }
+    25% { opacity: 1; }
+    100% {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) scale(1.3);
+    }
+}
+
+/* HIỆU ỨNG 3: PHÁO HOA TRÁI TIM */
+
+.love-experience.firework-mode {
+    background:
+        radial-gradient(ellipse at center, #25143e, #090612 80%);
+}
+
+.firework {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: #ffacd4;
+    box-shadow: 0 0 10px #ffacd4, 0 0 25px #d5a1ff;
+    animation: fireworkBurst 1.5s ease-out forwards;
+}
+
+@keyframes fireworkBurst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--fx), var(--fy)) scale(.3);
+    }
+}
+
+@keyframes hugPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+}
+
+.love-scene.hugging .love-visual {
+    animation: hugPulse .7s ease-in-out 3;
+}
+
+@media (max-width: 520px) {
+    .love-scene { padding: 20px 5px; }
+    .love-scene p { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rose-petal,
+    .heart-spark,
+    .firework {
+        animation-duration: 2s;
+    }
+}
+
+.promise-item {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.promise-item::after {
+    content: "Chạm để khám phá ♡";
+    display: block;
+    margin-top: 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #ffadd4;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: .3s;
+}
+
+.promise-item:hover::after,
+.promise-item:focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.promise-item:focus-visible {
+    outline: 2px solid #ff9bc9;
+    outline-offset: 4px;
+}
+
+.promise-item:active {
+    transform: scale(.97);
+}
+
 </style>
 </head>
 
@@ -696,10 +1063,23 @@ footer {
     </div>
 
     <footer>
-        MADE WITH ♡ JUST FOR YOU · 20/10/2026
+        NAH · 20/10/2026
     </footer>
 
 </main>
+
+<!-- CỬA SỔ HIỆU ỨNG TÌNH YÊU -->
+<div id="loveExperience" class="love-experience" aria-hidden="true">
+    <button class="love-close" id="closeExperience"
+            aria-label="Đóng hiệu ứng">✕</button>
+
+    <div class="love-scene" id="loveScene">
+        <div class="love-visual" id="loveVisual">🌹</div>
+        <h2 id="loveTitle">Một điều dành riêng cho em</h2>
+        <p id="loveMessage"></p>
+        <button class="love-hug" id="loveHug">Gửi em một cái ôm 💗</button>
+    </div>
+</div>
 
 <script>
 const message = document.getElementById("message");
@@ -738,6 +1118,20 @@ giftBtn.addEventListener("click", () => {
         : "🎁 Mở món quà của anh";
 
     if (isOpen) {
+    
+if (isOpen) {
+    launchPhotoBurst();
+
+    gift.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    for (let i = 0; i < 18; i++) {
+        setTimeout(createHeart, i * 100);
+    }
+}
+
         gift.scrollIntoView({
             behavior: "smooth",
             block: "center"
@@ -832,6 +1226,410 @@ musicToggle.addEventListener("click", async () => {
     }
 });
 
+/* Danh sách ảnh kỷ niệm */
+const memoryPhotos = [
+    "anh1.jpg",
+    "anh2.jpg",
+    "anh3.jpg",
+    "anh4.jpg",
+    "anh5.jpg",
+    "anh6.jpg",
+    "anh7.jpg",
+    "anh8.jpg",
+    "anh9.jpg",
+];
+
+function launchPhotoBurst() {
+    // Không tạo hiệu ứng lặp chồng lên nhau
+    if (document.querySelector(".photo-burst")) return;
+
+    const layer = document.createElement("div");
+    layer.className = "photo-burst";
+    document.body.appendChild(layer);
+
+    // Tạo 32 lượt ảnh, dùng lại danh sách nếu ảnh ít
+    const totalPhotos = 32;
+
+    for (let i = 0; i < totalPhotos; i++) {
+        const img = document.createElement("img");
+
+        img.className = "flying-photo";
+        img.src = memoryPhotos[i % memoryPhotos.length];
+        img.alt = "Kỷ niệm của chúng mình";
+
+        // Rải ảnh khắp chiều ngang màn hình
+        img.style.left = Math.random() * 92 + "%";
+
+        // Mỗi ảnh bay với thời gian và hướng khác nhau
+        img.style.setProperty(
+            "--duration",
+            (4 + Math.random() * 3) + "s"
+        );
+
+        img.style.setProperty(
+            "--drift",
+            (Math.random() * 240 - 120) + "px"
+        );
+
+        img.style.setProperty(
+            "--start-rotate",
+            (Math.random() * 30 - 15) + "deg"
+        );
+
+        img.style.setProperty(
+            "--end-rotate",
+            (Math.random() * 100 - 50) + "deg"
+        );
+
+        img.style.setProperty(
+            "--end-scale",
+            (0.7 + Math.random() * 0.6).toString()
+        );
+
+        // Cho ảnh xuất hiện rải rác trong 1,6 giây
+        img.style.animationDelay = (Math.random() * 1.6) + "s";
+
+        layer.appendChild(img);
+    }
+
+    // Thêm trái tim, hoa và ánh sao
+    const decorations = ["💗", "💕", "💖", "🌸", "🌷", "✨"];
+
+    for (let i = 0; i < 24; i++) {
+        const heart = document.createElement("span");
+
+        heart.className = "burst-heart";
+        heart.textContent =
+            decorations[Math.floor(Math.random() * decorations.length)];
+
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.setProperty(
+            "--duration",
+            (3 + Math.random() * 3) + "s"
+        );
+        heart.style.setProperty(
+            "--drift",
+            (Math.random() * 180 - 90) + "px"
+        );
+        heart.style.animationDelay = (Math.random() * 1.5) + "s";
+
+        layer.appendChild(heart);
+    }
+
+    // Dọn các phần tử sau khi hiệu ứng kết thúc
+    setTimeout(() => layer.remove(), 10000);
+}
+
+/* ===== BA MÓN QUÀ TƯƠNG TÁC ===== */
+
+const loveExperience = document.getElementById("loveExperience");
+const loveScene = document.getElementById("loveScene");
+const loveVisual = document.getElementById("loveVisual");
+const loveTitle = document.getElementById("loveTitle");
+const loveMessage = document.getElementById("loveMessage");
+const closeExperience = document.getElementById("closeExperience");
+const loveHug = document.getElementById("loveHug");
+
+let loveTypingTimer = null;
+let loveEffectTimers = [];
+let activeLoveEffect = 0;
+
+const loveGifts = [
+    {
+        mode: "rose-mode",
+        icon: "🌹",
+        title: "Mong thế giới dịu dàng với em",
+        message:
+            "Mong em luôn được yêu thương, trân trọng " +
+            "và nâng niu như đóa hoa đẹp nhất. 🌷\n\n" +
+            "Nếu có những ngày mệt mỏi, hãy nhớ rằng " +
+            "em vẫn luôn xứng đáng với những điều tốt đẹp.",
+        button: "Gửi em một cái ôm 💗"
+    },
+    {
+        mode: "heart-mode",
+        icon: "💗",
+        title: "Anh luôn mong được bên cạnh em",
+        message:
+            "Không cần ngày nào cũng hoàn hảo.\n\n" +
+            "Chỉ mong khi vui mình cùng cười, " +
+            "khi buồn mình có thể lắng nghe nhau, " +
+            "và cùng nhau trưởng thành qua từng ngày. 🫶",
+        button: "Gửi em một cái ôm 💗"
+    },
+    {
+        mode: "firework-mode",
+        icon: "🎆",
+        title: "Chúc em luôn hạnh phúc",
+        message:
+            "Mong nụ cười luôn ở trên môi em, " +
+            "ước mơ của em từng bước thành hiện thực " +
+            "và mỗi ngày đều có một điều khiến em vui. ✨\n\n" +
+            "Chúc cô gái anh thương một ngày 20/10 thật đẹp!",
+        button: "Gửi em một cái ôm 💗"
+    }
+];
+
+// Lưu timer để có thể dọn khi đóng hiệu ứng
+function addLoveTimer(callback, delay) {
+    const timer = setTimeout(callback, delay);
+    loveEffectTimers.push(timer);
+    return timer;
+}
+
+function clearLoveEffects() {
+    clearTimeout(loveTypingTimer);
+
+    loveEffectTimers.forEach(clearTimeout);
+    loveEffectTimers = [];
+
+    loveExperience.querySelectorAll(
+        ".rose-petal, .heart-pair, .heart-spark, .firework"
+    ).forEach(el => el.remove());
+}
+
+// Hiệu ứng gõ lời nhắn
+function typeLoveMessage(text) {
+    clearTimeout(loveTypingTimer);
+    loveMessage.textContent = "";
+
+    let i = 0;
+
+    function writeNext() {
+        if (!loveExperience.classList.contains("active")) return;
+
+        if (i < text.length) {
+            loveMessage.textContent += text.charAt(i);
+            i++;
+
+            loveTypingTimer = setTimeout(
+                writeNext,
+                text.charAt(i - 1) === "\n" ? 220 : 30
+            );
+        }
+    }
+
+    writeNext();
+}
+
+// 1. Mưa cánh hoa hồng
+function launchRosePetals() {
+    const petals = ["🌸", "🌹", "🌷", "💗"];
+
+    for (let i = 0; i < 38; i++) {
+        addLoveTimer(() => {
+            if (!loveExperience.classList.contains("active")) return;
+
+            const petal = document.createElement("span");
+            petal.className = "rose-petal";
+            petal.textContent =
+                petals[Math.floor(Math.random() * petals.length)];
+
+            petal.style.left = Math.random() * 100 + "%";
+            petal.style.fontSize = (18 + Math.random() * 22) + "px";
+            petal.style.setProperty(
+                "--fall-time",
+                (4 + Math.random() * 4) + "s"
+            );
+            petal.style.setProperty(
+                "--sway",
+                (Math.random() * 180 - 90) + "px"
+            );
+
+            loveExperience.appendChild(petal);
+            addLoveTimer(() => petal.remove(), 8500);
+        }, i * 130);
+    }
+}
+
+// 2. Hai trái tim bay về gặp nhau
+function launchConnectedHearts() {
+    const pair = document.createElement("div");
+    pair.className = "heart-pair";
+    pair.innerHTML = "<span>💗</span><span>💗</span>";
+
+    loveExperience.appendChild(pair);
+
+    // Các tia sáng xuất hiện quanh trái tim
+    for (let i = 0; i < 28; i++) {
+        const spark = document.createElement("span");
+        spark.className = "heart-spark";
+        spark.textContent = ["✨", "💕", "✦"][i % 3];
+
+        spark.style.left = (35 + Math.random() * 30) + "%";
+        spark.style.top = (20 + Math.random() * 40) + "%";
+        spark.style.setProperty(
+            "--dx",
+            (Math.random() * 280 - 140) + "px"
+        );
+        spark.style.setProperty(
+            "--dy",
+            (Math.random() * 280 - 140) + "px"
+        );
+        spark.style.animationDelay = Math.random() * 1.2 + "s";
+
+        loveExperience.appendChild(spark);
+        addLoveTimer(() => spark.remove(), 4000);
+    }
+
+    addLoveTimer(() => pair.remove(), 3000);
+}
+
+// 3. Pháo hoa trái tim
+function launchFireworks() {
+    function burst() {
+        if (!loveExperience.classList.contains("active")) return;
+
+        const x = 10 + Math.random() * 80;
+        const y = 10 + Math.random() * 65;
+        const particles = 18;
+
+        for (let i = 0; i < particles; i++) {
+            const angle = (Math.PI * 2 * i) / particles;
+            const distance = 45 + Math.random() * 95;
+
+            const particle = document.createElement("span");
+            particle.className = "firework";
+
+            particle.style.left = x + "%";
+            particle.style.top = y + "%";
+            particle.style.setProperty(
+                "--fx",
+                Math.cos(angle) * distance + "px"
+            );
+            particle.style.setProperty(
+                "--fy",
+                Math.sin(angle) * distance + "px"
+            );
+
+            loveExperience.appendChild(particle);
+            addLoveTimer(() => particle.remove(), 1700);
+        }
+    }
+
+    burst();
+    addLoveTimer(burst, 450);
+    addLoveTimer(burst, 1100);
+    addLoveTimer(burst, 1900);
+}
+
+// Mở đúng hiệu ứng theo ô được nhấn
+function openLoveGift(number) {
+    clearLoveEffects();
+
+    activeLoveEffect = number;
+
+    const gift = loveGifts[number];
+
+    loveExperience.classList.remove(
+        "rose-mode",
+        "heart-mode",
+        "firework-mode"
+    );
+
+    loveExperience.classList.add("active", gift.mode);
+    loveExperience.setAttribute("aria-hidden", "false");
+
+    loveVisual.textContent = gift.icon;
+    loveTitle.textContent = gift.title;
+    loveHug.textContent = gift.button;
+    loveScene.classList.remove("hugging");
+
+    document.body.style.overflow = "hidden";
+
+    typeLoveMessage(gift.message);
+
+    if (number === 0) launchRosePetals();
+    if (number === 1) launchConnectedHearts();
+    if (number === 2) launchFireworks();
+}
+
+// Gắn sự kiện vào 3 ô trên website
+
+document.querySelectorAll(".promise-item").forEach((item, index) => {
+    item.style.cursor = "pointer";
+
+    item.addEventListener("click", function () {
+        console.log("Đã nhấn vào ô:", index);
+
+        if (typeof openLoveGift === "function") {
+            openLoveGift(index);
+        } else {
+            alert("Chưa tìm thấy hàm openLoveGift(). Kiểm tra JavaScript!");
+        }
+    });
+});
+
+
+// Nút đóng để quay về trang chính
+function closeLoveGift() {
+    clearLoveEffects();
+
+    loveExperience.classList.remove(
+        "active",
+        "rose-mode",
+        "heart-mode",
+        "firework-mode"
+    );
+
+    loveExperience.setAttribute("aria-hidden", "true");
+    loveScene.classList.remove("hugging");
+    document.body.style.overflow = "";
+}
+
+closeExperience.addEventListener("click", closeLoveGift);
+
+// Nhấn ra vùng nền tối cũng đóng được
+loveExperience.addEventListener("click", event => {
+    if (event.target === loveExperience) {
+        closeLoveGift();
+    }
+});
+
+// Nút gửi cái ôm
+loveHug.addEventListener("click", () => {
+    loveScene.classList.remove("hugging");
+
+    // Khởi động lại hoạt ảnh
+    void loveVisual.offsetWidth;
+    loveScene.classList.add("hugging");
+
+    loveVisual.textContent = "🫂";
+
+    loveTitle.textContent = "Gửi em một cái ôm thật ấm áp";
+    typeLoveMessage(
+        "Tặng em một cái ôm từ xa nhé! 💗\n\n" +
+        "Mong em luôn cảm thấy được yêu thương, " +
+        "được lắng nghe và có thật nhiều niềm vui."
+    );
+
+    // Thêm trái tim bay xung quanh
+    for (let i = 0; i < 15; i++) {
+        addLoveTimer(() => {
+            if (!loveExperience.classList.contains("active")) return;
+
+            const heart = document.createElement("span");
+            heart.className = "heart-spark";
+            heart.textContent = ["💗", "💕", "✨"][i % 3];
+
+            heart.style.left = (30 + Math.random() * 40) + "%";
+            heart.style.top = (30 + Math.random() * 40) + "%";
+            heart.style.setProperty(
+                "--dx",
+                (Math.random() * 220 - 110) + "px"
+            );
+            heart.style.setProperty(
+                "--dy",
+                (Math.random() * 220 - 110) + "px"
+            );
+
+            loveExperience.appendChild(heart);
+            addLoveTimer(() => heart.remove(), 3000);
+        }, i * 100);
+    }
+});
+
 </script>
+
 </body>
 </html>
